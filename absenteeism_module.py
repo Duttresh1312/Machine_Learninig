@@ -5,18 +5,18 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.base import BaseEstimator, TransformerMixin
 
 # the custom scaler class 
-class CustomScaler(BaseEstimator,TransformerMixin): 
-    
+class CustomScaler(BaseEstimator,TransformerMixin):  
     def __init__(self,columns,copy=True,with_mean=True,with_std=True):
-        self.scaler = StandardScaler(copy,with_mean,with_std)
         self.columns = columns
-        self.mean_ = None
-        self.var_ = None
-
+        self.copy = copy
+        self.with_mean = with_mean  
+        self.with_std = with_std        
+        
     def fit(self, X, y=None):
+        self.scaler = StandardScaler(copy=self.copy, with_mean=self.with_mean, with_std=self.with_std)
         self.scaler.fit(X[self.columns], y)
-        self.mean_ = np.array(np.mean(X[self.columns]))
-        self.var_ = np.array(np.var(X[self.columns]))
+        self.mean_ = np.mean(X[self.columns])
+        self.var_ = np.var(X[self.columns])
         return self
 
     def transform(self, X, y=None, copy=None):
